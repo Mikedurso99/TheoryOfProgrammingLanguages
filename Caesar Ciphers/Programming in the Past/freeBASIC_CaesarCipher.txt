@@ -1,0 +1,72 @@
+' Michael Durso                                                '
+' Professor Labouseur                                          '
+' CMPT331 - Theory of Programming Languages                    '
+' Caesar Cipher: BASIC Book (Get it... it gets a BASIC name)   '
+'______________________________________________________________'
+
+
+' ___________Some Notes___________
+' strang is a string but cooler 
+' Encrypt and Decrypt are the same except + or - the 26
+' UCase to capitalize letters
+
+' Encrypt
+Function encrypt(strang As String, shiftAmount As Integer) As String
+    dim i As Integer
+    Const minChar As Integer = 65, maxChar As Integer = 90
+    strang = UCase(strang)
+    
+    for i = 0 to len(strang)
+        if strang[i] >= minChar And strang[i] <= maxChar then
+            strang[i] = strang[i] + shiftAmount
+            if strang[i] > maxChar then
+                strang[i] = strang[i] - 26
+            end if
+        end if
+    next
+    Return strang
+End Function
+
+' Decrypt
+Function decrypt(strang As String, shiftAmount As Integer) As String
+    dim i As Integer
+    Const minChar As Integer = 65, maxChar As Integer = 90
+    strang = UCase(strang)
+
+    for i = 0 to len(strang)
+        if strang[i] >= minChar And strang[i] <= maxChar then
+            strang[i] = strang[i] - shiftAmount
+            if strang[i] < minChar then
+                strang[i] = strang[i] + 26
+            end if
+        end if
+    next
+    Return strang
+End Function
+
+' Solve
+Sub solve(strang As String, currentShiftAmt As Integer)
+    dim i As Integer
+    Const minChar As Integer = 65, maxChar As Integer = 90
+    strang = UCase(strang)
+    
+    Do  
+        Print "Caesar " + str$(currentShiftAmt) + ": " + strang
+        for i = 0 to len(strang)
+            if strang[i] >= minChar And strang[i] <= maxChar then
+                strang[i] = strang[i] - 1
+                if strang[i] < minChar then
+                    strang[i] = strang[i] + 26
+                end if
+            end if
+        next
+        currentShiftAmt = currentShiftAmt - 1
+    Loop While currentShiftAmt > -1
+End Sub
+
+dim strang As String = "Hal"
+Print "Original Message: "; strang
+Print "Encrypted String: "; encrypt(strang, 8)
+Print "Decrypted String: "; decrypt(strang, 8)
+solve(strang, 26)
+Sleep

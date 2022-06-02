@@ -1,0 +1,41 @@
+;  Michael Durso                                                 ;
+;  Professor Labouseur                                           ;
+;  CMPT331 - Theory of Programming Languages                     ;
+;  Caesar Cipher: The LISP Legend                                ;
+;________________________________________________________________;
+
+; Grabs the char-code for lowercase 'a' and 'z' and stores them
+; Conditional for shifting letters
+(defun shift(caesar shiftAmount)
+    (let* ((shifter (char-code caesar))
+        (aLow (char-code #\a))(zLow (char-code #\z))
+        (base (cond ((and (>= shifter aLow) (<= shifter zLow)) aLow)(t nil))))
+        (if base (code-char (+ (mod (+ (- shifter base) shiftAmount) 26) base)) caesar)))
+        
+; Encrypt
+(defun doEncrypt(str shiftAmount)
+    (map 'string #'(lambda (x) (shift x shiftAmount)) str))
+    
+; Decrypt
+; All this does is doEncrypt with a negative shiftAmount val
+(defun doDecrypt(str shiftAmount)
+    (doEncrypt str (- shiftAmount)))
+    
+; Solve
+; Loops the Decrypt function and formats print statements
+(defun solve (str maxShift)
+    (let ((count 0))
+        (loop while (>= maxShift 0) do
+            (format t "Caesar ~d: ~a ~%" maxShift (doDecrypt str count))
+            (setq maxShift (- maxShift 1))
+            (setq count (+ count 1)))))
+            
+; main
+; Make the things go
+(let* ((str "the cake is a lie")(shiftAmount 8)(maxShift 26)(strSolve "hal")
+  (encrypt (doEncrypt str shiftAmount))
+  (decrypt (doDecrypt encrypt shiftAmount)))
+(format t "Original Message: ~a ~%" str)
+(format t "Encrypted String: ~a ~%" encrypt)
+(format t "Decrypted String: ~a ~%" decrypt)
+(solve strSolve maxShift))

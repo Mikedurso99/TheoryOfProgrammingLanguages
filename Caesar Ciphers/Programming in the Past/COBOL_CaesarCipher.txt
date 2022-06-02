@@ -1,0 +1,63 @@
+*> Michael Durso                                                <*
+*> Professor Labouseur                                          <*
+*> CMPT331 - Theory of Programming Languages                    <*
+*> Caesar Cipher: COBOL Chronicle                               <*
+*>______________________________________________________________<*
+
+IDENTIFICATION DIVISION.
+       PROGRAM-ID. Caesar_Cipher.
+       *> Variable Fun-Time
+       DATA DIVISION.
+       		WORKING-STORAGE SECTION.
+       1 str PIC x(50)
+           VALUE "hal".
+       1 offset binary PIC 9(4) VALUE 8.
+       1 from-chars PIC x(26).
+       1 to-chars PIC x(26).
+       *> Values are needed twice for upper and lowercase conversion
+       1 tabl.
+        2 PIC x(26) VALUE "ABCDEFGHIJKLMNOPQRSTUVWXYZ".
+        2 PIC x(26) VALUE "ABCDEFGHIJKLMNOPQRSTUVWXYZ".
+       1 i PIC 9(2) VALUE 1.
+       
+       *> Make the stuff do the things
+       PROCEDURE DIVISION.
+       
+       biggerLetterMaker.
+           DISPLAY "Original Message: " str
+           Move Function Upper-case(str) to str
+           .
+       
+       doTheThings.
+           PERFORM encrypt
+           DISPLAY "Encrypted String: " str
+           PERFORM decrypt
+           DISPLAY "Decrypted String: " str
+           PERFORM solve VARYING i FROM 0 BY 1 UNTIL i = 27.
+           STOP RUN
+           .
+           
+       *> Encrypt, Decrypt, Solve
+       encrypt.
+           MOVE tabl (1:26) TO from-chars
+           MOVE tabl (1 + offset:26) TO to-chars
+           INSPECT str CONVERTING from-chars
+               TO to-chars
+           .
+ 
+       decrypt.
+           MOVE tabl (1 + offset:26) TO from-chars
+           MOVE tabl (1:26) TO to-chars
+           INSPECT str CONVERTING from-chars
+               TO to-chars
+           .
+           
+        solve.
+			MOVE tabl(2:26) TO from-chars.
+			MOVE tabl(1:26) TO to-chars.
+		    INSPECT str CONVERTING from-chars 
+		        TO to-chars.
+		    DISPLAY "Caeser " i ": " str
+		    .
+       *> Things done successfully via the stuff
+       END PROGRAM Caesar_Cipher.

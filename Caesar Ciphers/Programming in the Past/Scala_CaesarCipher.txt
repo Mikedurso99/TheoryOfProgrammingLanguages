@@ -1,0 +1,86 @@
+// Michael Durso                                              \\
+// Professor Labouseur                                        \\
+// CMPT331 - Theory of Programming Languages                  \\
+// Caesar Cipher: Scala Saga                                  \\
+//____________________________________________________________\\
+
+object Main extends App{
+// Variable Fun-Time  
+    var strang = "hal"
+    var minChar = 65
+    var maxChar = 90
+  
+// Set shiftAmount before calling each function
+// Call Encrypt, Decrypt, and Solve functions
+  var shiftAmount = 1
+  encrypt(strang, shiftAmount)
+
+  shiftAmount = 1
+  decrypt(strang, shiftAmount)
+
+  shiftAmount = 26
+  solve(strang, shiftAmount)
+
+// Function definitions for Encrypt, Decrypt, and Solve
+// toUpperCase for everything before the loop shift stuff
+
+  def encrypt (strang:String, shiftAmount:Int) : Unit = {
+    // Small variable fun time
+    var ltrs = strang.toUpperCase.toCharArray
+    print("Original Message: ")
+    println(ltrs.mkString)
+    var i = 0
+    // Loop and shift
+    while (i < ltrs.length()) {
+      var j = ltrs(i).toInt
+      if (j >= minChar && j <= maxChar) {
+        j = if (j + shiftAmount > maxChar) j + shiftAmount - 26 else j + shiftAmount
+      }
+      ltrs(i) = j.toChar
+      i = i + 1
+    }
+    print("Encrypted String: ")
+    println(ltrs.mkString)
+  }
+
+  def decrypt (strang:String, shiftAmount:Int) : Unit = {
+    // Small variable fun time
+    var ltrs = strang.toUpperCase.toCharArray
+    var i = 0
+    // Loop and shift
+    while (i < ltrs.length()) {
+      var j = ltrs(i).toInt
+      if (j >= minChar && j <= maxChar) {
+        j = if (j - shiftAmount < minChar) j - shiftAmount + 26 else j - shiftAmount
+      }
+      ltrs(i) = j.toChar
+      i = i + 1
+    }
+    print("Decrypted String: ")
+    println(ltrs.mkString)
+  }
+
+  def solve (strang:String, maxShiftValue:Int) : Unit = {
+    // Small variable fun time
+    var shiftValue = maxShiftValue
+    val ltrs = strang.toUpperCase.toCharArray
+    var i = 0
+    // Loop and shift
+    while (shiftValue > -1) {
+      println("Caesar " + shiftValue + ": " + ltrs.mkString)
+      while (i < ltrs.length()) {
+        var j = ltrs(i).toInt
+        if (j >= minChar && j <= maxChar) {
+          j = j - 1
+          if (j < minChar) {
+            j = j + 26
+          }
+        }
+        ltrs(i) = j.toChar
+        i = i + 1
+      }
+      i = 0
+      shiftValue = shiftValue - 1
+    }
+  }
+}

@@ -1,0 +1,41 @@
+// Michael Durso                                              \\
+// Professor Labouseur                                        \\
+// CMPT331 - Theory of Programming Languages                  \\
+// Caesar Cipher: The Scala Sequel                            \\
+//____________________________________________________________\\
+
+// convert to ASCII
+object caesar {
+    private def shifty(base: Char, char: Char, offset: Int) =
+        (base.toInt + ((char.toInt - base.toInt + offset) %26)).toChar
+        
+    // map values and shift
+    def encrypt(str: String, shiftAmount: Int) = str.map {
+        case x if x isLower => shifty('a', x, shiftAmount)
+        case x => x
+    }
+
+    // Use Encrypt with -shiftAmount
+    def decrypt(str: String, shiftAmount: Int) = encrypt(str, -shiftAmount)
+    
+    // Loop Encrypt
+    def solve(str: String, maxShift:Int): Unit = {
+        if(maxShift > -1){
+            println("Caesar " + maxShift + ": " + encrypt(str, maxShift))
+            solve(str, (maxShift-1))
+        }
+    }
+}
+
+// Get the job done
+object Main extends App {
+    val str = "hal"
+    val shiftAmount = 8
+    val maxShift = 26
+    println("Original Message: " + str)
+    val encrypted = caesar.encrypt(str, shiftAmount)
+    println("Encrypted String: " + encrypted)
+    val decrypted = caesar.decrypt(encrypted, shiftAmount)
+    println("Decrypted String: " + decrypted)
+    caesar.solve("hal", maxShift)
+}

@@ -1,0 +1,156 @@
+! Michael Durso                                                !
+! Professor Labouseur                                          !
+! CMPT331 - Theory of Programming Languages                    !
+! Caesar Cipher: Fortran Fairy Tale                            !
+!______________________________________________________________!
+
+program Caesar_Cipher
+
+! Set the shiftAmount to the amount of letters you would like to shift the text
+  integer, parameter :: shiftAmount = 8
+
+! Test strings for the cipher
+    CHARACTER(40) :: testStr1="hal"
+    CHARACTER(40) :: testStr2="This is a test string from Alan"
+    CHARACTER(40) :: testStr3="The cake is a lie"
+
+
+!!!!!  This is where stuff goes down  !!!!!
+   
+! Print the original message
+    write(*,"(2a)") "Original Message: ", testStr1
+    write(*,"(2a)") "Original Message: ", testStr2
+    write(*,"(2a)") "Original Message: ", testStr3
+    print*, ""
+
+! Convert to uppercase
+    CALL upperCase(testStr1)
+    CALL upperCase(testStr2)
+    CALL upperCase(testStr3)
+
+! Print the encrypted string
+    call encrypt(testStr1)
+    call encrypt(testStr2)
+    call encrypt(testStr3)
+    write(*, "(2a)") "Encrypted String: ", testStr1
+    write(*, "(2a)") "Encrypted String: ", testStr2
+    write(*, "(2a)") "Encrypted String: ", testStr3
+    print*, ""
+
+! Print the decrypted string
+    call decrypt(testStr1)
+    call decrypt(testStr2)
+    call decrypt(testStr3)
+    write(*, "(2a)") "Decrypted String: ", testStr1
+    write(*, "(2a)") "Decrypted String: ", testStr2
+    write(*, "(2a)") "Decrypted String: ", testStr3
+    print*, ""
+   
+! Show all shift amounts to for the enctrypted string
+    print*, "Solve:"
+    call solve(testStr1,26)
+
+
+contains
+
+
+! Subroutine to convert to uppercase
+
+subroutine upperCase(letter)
+   ! Variable fun-time
+       CHARACTER(*) letter
+       CHARACTER(1) c
+       INTEGER charInt
+
+   ! Loop through all letters
+       do i=1, len(letter), 1
+       
+    	! Get the current letter
+          c = letter(i:i+1)
+          charInt = iachar(c)
+
+		! Convert character to uppercase
+            IF (charInt > 90) THEN
+              charInt = charInt - 32
+            END IF
+          c = achar(charInt)
+
+		! Put the character back
+            letter(i:i) = c
+       end do
+end subroutine
+
+!______________________________________________________________!
+! Below are the Encrypt and Decrypt subroutines                !
+! They are exactly the same except for - or + the shiftAmount  !
+! The 65 is for ASCII character 'A'                            !
+!______________________________________________________________!
+
+! Subroutine to ENCRYPT the string
+
+subroutine encrypt(string)
+   ! Variable fun-time
+   CHARACTER(*), intent(inout) :: string
+   INTEGER :: i
+
+   ! Loop to encrypt the string
+   do i = 1, len(string)
+      select case(string(i:i))
+         case('A':'Z')
+            string(i:i) = achar(modulo(iachar(string(i:i)) - 65 + shiftAmount, 26) + 65)
+      end select
+   end do
+end subroutine
+
+
+! Subroutine to DECRYPT the string
+
+subroutine decrypt(string)
+   ! Variable fun-time
+   CHARACTER(*), intent(inout) :: string
+   INTEGER :: i
+
+   ! Loop to decrypt the strring
+   do i = 1, len(string)
+      select case(string(i:i))
+         case('A':'Z')
+            string(i:i) = achar(modulo(iachar(string(i:i)) - 65 - shiftAmount, 26) + 65)
+      end select
+   end do
+end subroutine
+
+
+! Subroutine to SOLVE by printing all shifts of the string
+
+subroutine solve(str, maxShift)
+   ! Variable fun-time
+    CHARACTER(*) str
+    CHARACTER(len=len(str)) strHolder
+    CHARACTER(1) c
+    INTEGER charInt
+    INTEGER maxShift
+    strHolder = str
+    
+    ! Outer loop
+    do n=maxShift, 0, -1
+	! Inner loop to go through letters
+     do i=1, len(str), 1
+          c = str(i:i+1)
+          charInt = iachar(c)
+        IF (charInt == 32) THEN
+          newInt = charInt
+        ELSE 
+          newInt = charInt + n
+        IF (newInt > 90) THEN
+          newInt = 64 + (newInt - 90)
+        END IF
+      END IF
+      c = achar(newInt)
+      ! Put characters back
+      strHolder(i:i) = c
+     end do	
+    print *," Caesar", n, ": ", strHolder
+   end do
+end subroutine
+
+end program Caesar_Cipher

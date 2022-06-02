@@ -1,0 +1,78 @@
+{ Michael Durso                                                }
+{ Professor Labouseur                                          }
+{ CMPT331 - Theory of Programming Languages                    }
+{ Caesar Cipher: Pascal Parable                                }
+{______________________________________________________________}
+
+Program CaesarCipher(output);
+{ All the procedures are below, they all work very similarly   }
+{ Encrypt adds the "shiftAmount"                               }
+{ Decrypt subtracts the "shiftAmount"                          }
+{ Solve adds 1 so that it it displays each shift amount        }
+{______________________________________________________________}
+
+
+{ Encrypt }
+procedure encrypt(var str: string; shiftAmount: integer);
+  var
+    i: integer;
+  begin
+    for i := 1 to length(str) do
+      case str[i] of
+        'A'..'Z': str[i] := chr(ord('A') + (ord(str[i]) - ord('A') + shiftAmount) mod 26);
+        'a'..'z': str[i] := chr(ord('a') + (ord(str[i]) - ord('a') + shiftAmount) mod 26);
+      end;
+  end;
+ 
+{ Decrypt }
+procedure decrypt(var str: string; shiftAmount: integer);
+  var
+    i: integer;
+  begin
+    for i := 1 to length(str) do
+      case str[i] of
+       'A'..'Z': str[i] := chr(ord('A') + (ord(str[i]) - ord('A') - shiftAmount + 26) mod 26);
+       'a'..'z': str[i] := chr(ord('a') + (ord(str[i]) - ord('a') - shiftAmount + 26) mod 26);
+      end;
+  end;
+  
+  
+{ Solve }
+procedure solve(var str : string; maxShift : integer);
+  var
+    j : integer;
+    i : integer;
+  begin
+    j := 0;
+    while j <= maxShift do
+      begin
+       for i := 1 to length(str) do 
+        case str[i] of
+         'A'..'Z': str[i] := chr(ord('A') + (ord(str[i]) - ord('A') + 1) mod 26);
+         'a'..'z': str[i] := chr(ord('a') + (ord(str[i]) - ord('a') + 1) mod 26);
+        end;
+        { prints the cases each iteration }
+        writeln('Caesar ', j, ': ', str);
+        j := j + 1;
+    end;
+end;  
+
+
+{ Everyones favorite time, Variable Fun-Time}
+var
+  shiftAmount: integer;
+  str: string;
+  maxShift: integer;
+
+{ The things will happen here }
+begin
+  shiftAmount := 8;
+  maxShift := 26;
+  str := 'Hal';
+  writeln ('Original Message: ', str);
+  encrypt(str, shiftAmount);
+  writeln ('Encrypted String: ', str);
+  decrypt(str, shiftAmount);
+  writeln ('Decrypted String: ', str);
+  solve(str, maxShift);
+end.

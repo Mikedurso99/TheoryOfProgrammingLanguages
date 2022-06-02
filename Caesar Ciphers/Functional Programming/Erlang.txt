@@ -1,0 +1,36 @@
+% Michael Durso                                                %
+% Professor Labouseur                                          %
+% CMPT331 - Theory of Programming Languages                    %
+% Caesar Cipher: The Erlang Epilogue                           %
+%______________________________________________________________%
+
+% Codingground calls the file "helloworld.erl"
+-module(helloworld). 
+-export([encrypt/2, decrypt/2, solve/2, main/0]).
+
+% Shift characters
+shifty(Char, ShiftAmount) ->
+	((((hd(Char)) - 65 + ShiftAmount) rem (26) + 26) rem 26) + 65.
+
+%  Encrypt
+encrypt(Str, ShiftAmount) ->
+	lists:map(fun(Char) -> shifty([(Char)], ShiftAmount) end, Str).
+
+% Decrypt
+decrypt(Str, ShiftAmount) ->
+	encrypt(Str, ShiftAmount * -1).
+
+% Solve
+solve(Str, MaxShift) ->
+	NumList = lists:seq(1, MaxShift),
+	lists:foreach(fun(ShiftAmount) ->
+		io:format("Caesar ~p: ", [ShiftAmount]),
+		io:format("~s~n ",
+		[decrypt(Str, ShiftAmount)]) end, NumList).
+
+% Fin.
+main() ->
+    io:format("Original Message: ~s~n", [Str]),
+	io:format("Encrypted String: ~s~n", [encrypt("hal", 8)]),
+	io:format("Decrypted String: ~s~n", [decrypt("pit", 8)]),
+	solve("hal", 26).

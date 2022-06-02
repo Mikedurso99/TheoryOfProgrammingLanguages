@@ -1,0 +1,40 @@
+(*  Michael Durso                                               *)
+(*  Professor Labouseur                                         *)
+(*  CMPT331 - Theory of Programming Languages                   *)
+(*  Caesar Cipher: The ML Myth                                  *)
+(*______________________________________________________________*)
+
+
+(* shift characters *)
+fun shift(letter: char, shiftAmount : int) : char =
+    let
+	   val charCode = Char.ord letter;
+	in
+	   (* Shift if it is any char (not spaces) *)
+	   if charCode = 32 then Char.chr charCode
+	   else chr (((charCode - 65 + shiftAmount) mod 26) + 65)
+	end;
+
+(* Encrypt *)    
+(* map each character to a new character and put the string back together *)
+fun encrypt (str : string, shiftAmount : int) : string =
+    String.implode(map (fn x => shift ((Char.toUpper x), shiftAmount)) (String.explode(str)));
+
+(* Decrypt *)
+(* Do Encrypt with a negative shiftAmount*)
+fun decrypt(str : string, shiftAmount : int) : string = encrypt(str, (shiftAmount * ~1));
+
+(* Encrypt a string from maxShift to 0 using recursion*)
+fun solve(str, maxShift)  = (
+    print(("Caesar " ^ Int.toString maxShift)^": " ^ encrypt(str, maxShift)^"\n");
+    if maxShift > 0 then solve(str, maxShift-1) else ())
+
+
+(* The "Make Things Happen" Zone *)
+val str = "This is a test string from Alan";
+val encryptedString = "BPQA QA I BMAB ABZQVO NZWU ITIV";
+print("Original Message: " ^ str ^ "\n");
+print("Encrypted String: " ^ encrypt(str, 8) ^ "\n");
+print("Decrypted String: " ^ decrypt(encryptedString, 8) ^ "\n");
+solve("hal", 26);
+
